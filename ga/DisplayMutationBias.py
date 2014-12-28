@@ -1,4 +1,4 @@
-import Chromosome
+import Population
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,30 +7,22 @@ import random
 #displays a graph showing the mutation bias within two populations
 class DisplayMutationBias:
 
-	_population1 = []
-	_population2 = []
-
 	_population_size = 25
 
 	def __init__(self):
-		self._population1 = [Chromosome.Chromosome(0) for _ in xrange(self._population_size)];
-		self._population2 = [Chromosome.Chromosome(100) for _ in xrange(self._population_size)];
+		self._pop1 = Population.Population(0)
+		self._pop2 = Population.Population(100)
 		self.print_populations()
 
 	def next_generation(self):
-		for c in self._population1:
-			c.mutate()
-		for c in self._population2:
-			c.mutate()
+		self._pop1.mutate()
+		self._pop2.mutate()
 
-		return [self._population1, self._population2]
+		return [self._pop1, self._pop2]
 
 	def print_populations(self):
-		print "population1"
-		fitness_list_1 = [c.get_fitness() for c in self._population1]
-		fitness_list_2 = [c.get_fitness() for c in self._population2]
-		print fitness_list_1
-		print fitness_list_2
+		self._pop1.print_pop()
+		self._pop2.print_pop()
 
 
 
@@ -46,15 +38,15 @@ if __name__ == '__main__':
 
 	for i in xrange(600):
 		pop1, pop2 = bias.next_generation()
-		for chromosome in random.sample(pop1, 15):
+		for chromosome in pop1.get_sample():
 			x1.append(i)
 			y1.append(chromosome.get_fitness())
-		for chromosome in random.sample(pop2, 15):
+		for chromosome in pop2.get_sample():
 			x2.append(i)
 			y2.append(chromosome.get_fitness())
 		x3.append(i)
 		y3.append(50)
-		print [c.get_fitness() for c in pop1]
+
 	plt.scatter(
 		x1,
 		y1,

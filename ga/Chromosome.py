@@ -6,8 +6,13 @@ import math
 #Chromosome represented as a scalar value
 class Chromosome:
 
-	value = 0 # value defaults to 0
 	_max_value = 100
+
+	def __init__(self, value):
+		if value is not None:
+			self.value = value
+		else:
+			self.value = 0
 
 	# return objective fitness of this chromosome
 	def get_fitness(self):

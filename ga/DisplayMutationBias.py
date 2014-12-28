@@ -28,48 +28,35 @@ class DisplayMutationBias:
 
 if __name__ == '__main__':
 	bias = DisplayMutationBias()
-	x1 = []
-	y1 = []
-	x2 = []
-	y2 = []
+	x = []
+	y_pop1 = []
+	y_pop2 = []
 
-	x3 = []
-	y3 = []
 
 	for i in xrange(600):
 		pop1, pop2 = bias.next_generation()
-		for chromosome in pop1.get_sample():
-			x1.append(i)
-			y1.append(chromosome.get_fitness())
-		for chromosome in pop2.get_sample():
-			x2.append(i)
-			y2.append(chromosome.get_fitness())
-		x3.append(i)
-		y3.append(50)
 
-	plt.scatter(
-		x1,
-		y1,
-		s=1,
-		facecolor='red',
-		lw=0
-	)
-	plt.scatter(
-		x2,
-		y2,
-		s=1,
-		facecolor='grey',
-		lw=0
-	)
-	plt.scatter(
-		x3,
-		y3,
-		s=1,
-		facecolor='black',
-		lw=1
-	)
+		# display average
+		# x.append(i)
+		# y_pop1.append(pop1.get_mean_fitness())
+		# y_pop2.append(pop2.get_mean_fitness())
+
+		# display whole sample
+		for chromosome in pop1.get_sample():
+			x.append(i)
+			y_pop1.append(chromosome.get_fitness())
+		for chromosome in pop2.get_sample():
+			y_pop2.append(chromosome.get_fitness())
+
+	plt.scatter(x, y_pop1, s=1, facecolor='red', lw=0)
+	plt.scatter(x, y_pop2, s=1, facecolor='grey', lw=0)
+
+	#generate y=50
+	x_50 = [i for i in xrange(600)]
+	y_50 = [50 for _ in xrange(600)]
+	plt.scatter(x_50, y_50, s=1, facecolor='black', lw=1)
+
 	plt.ylabel('Objective fitness')
 	plt.xlabel('Generations')
 	plt.axis([0, 600, 0, 100])
 	plt.show()
-		#bias.print_populations()

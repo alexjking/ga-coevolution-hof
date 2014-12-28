@@ -27,7 +27,11 @@ class Chromosome:
 		#mutate the bit string
 		for i in xrange(self._max_value): 
 			if random.random() <= 0.005:
-				bit_string_value[i] = random.choice([0,1])
+				#bit_string_value[i] = random.choice([0,1])
+				if bit_string_value[i] == 1:
+					bit_string_value[i] = 0
+				else:
+					bit_string_value[i] = 1
 
 		#recalculate the value/fitness
 		sum = reduce(lambda x,y: x+y, bit_string_value)

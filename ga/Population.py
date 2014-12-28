@@ -21,3 +21,6 @@ class Population:
 
 	def get_sample(self):
 		return random.sample(self._pop, self._sample_size)
+
+	def get_mean_fitness(self):
+		return reduce(lambda x,y: x+y, [chromosome.get_fitness() for chromosome in self._pop])/len(self._pop)

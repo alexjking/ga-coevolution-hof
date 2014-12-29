@@ -18,6 +18,13 @@ class Chromosome:
 	def get_fitness(self):
 		return self.value
 
+	# return whether self has a higher fitness than another chromosome
+	def score(self, b):
+		if self.get_fitness() > b.get_fitness():
+			return 1
+		else:
+			return 0
+
 	def mutate(self):
 		#convert current value to a bit string
 		bit_string_value = list("")
@@ -27,11 +34,11 @@ class Chromosome:
 		#mutate the bit string
 		for i in xrange(self._max_value): 
 			if random.random() <= 0.005:
-				#bit_string_value[i] = random.choice([0,1])
-				if bit_string_value[i] == 1:
-					bit_string_value[i] = 0
-				else:
-					bit_string_value[i] = 1
+				bit_string_value[i] = random.choice([0,1])
+				# if bit_string_value[i] == 1:
+				# 	bit_string_value[i] = 0
+				# else:
+				# 	bit_string_value[i] = 1
 
 		#recalculate the value/fitness
 		sum = reduce(lambda x,y: x+y, bit_string_value)

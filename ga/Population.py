@@ -10,10 +10,12 @@ class Population:
 
 	_pop = []
 	_population_size = 25
-	_sample_size = 15
+	_sample_size = 1
+
+	_individual_dimensions = 1
 
 	def __init__(self, chromosome_value):
-		self._pop = [Chromosome.Chromosome(chromosome_value) for _ in xrange(self._population_size)]
+		self._pop = [Chromosome.Chromosome(self._individual_dimensions) for _ in xrange(self._population_size)]
 
 	def print_pop(self):
 		print [chromosome.get_fitness() for chromosome in self._pop]

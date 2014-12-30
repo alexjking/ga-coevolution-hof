@@ -6,9 +6,9 @@ import numpy as np
 class Coevolution:
 
 
-	def __init__(self):
-		self._pop1 = Population.Population()
-		self._pop2 = Population.Population()
+	def __init__(self, intransitive_superiority=False):
+		self._pop1 = Population.Population(intransitive_superiority)
+		self._pop2 = Population.Population(intransitive_superiority)
 
 	def next_generation(self):
 		
@@ -21,7 +21,7 @@ class Coevolution:
 		return pop1_copy, pop2_copy
 
 if __name__ == '__main__':
-	coev = Coevolution()
+	coev = Coevolution(intransitive_superiority=True)
 	x = []
 	y1 = []
 	y2 = []

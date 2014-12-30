@@ -10,7 +10,7 @@ class Population:
 
 	_pop = []
 	_population_size = 25
-	_sample_size = 1
+	_sample_size = 15
 
 	_individual_dimensions = 1
 
@@ -62,7 +62,6 @@ class Population:
 			return subj_fitness_probability_list
 		else:
 			#subj fitness sum is zero therefore all have lost and are equal
-			print "****subj fitness = 0 ****"
 			subj_fitness_probability_list = []
 			increment = 1.0 / len(self._pop) 
 			current_sum = 0.0
@@ -70,7 +69,6 @@ class Population:
 				 subj_fitness_probability_list.append(current_sum)
 				 current_sum += increment
 			subj_fitness_probability_list.append(1.0)
-			#print subj_fitness_probability_list
 			return subj_fitness_probability_list
 
 

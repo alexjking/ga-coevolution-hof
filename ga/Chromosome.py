@@ -7,46 +7,80 @@ import math
 class Chromosome:
 
 	_max_value = 100
+	_skills = []
 
-	def __init__(self, value):
-		if value is not None:
-			self.value = value
+	def __init__(self, dimensions):
+		self._skills = []
+		if 100 % dimensions == 0:
+			skill_length = self._max_value / dimensions
+			for i in xrange(dimensions):
+				self._skills.append([0 for _ in xrange(skill_length)])
 		else:
-			self.value = 0
+			raise Exception("Invalid number of dimensions for genome")
+		
 
 	# return objective fitness of this chromosome
 	def get_fitness(self):
-		return self.value
+		fitness_sum = 0
+		for skill in self._skills:
+			fitness_sum += reduce(lambda x,y: x+y, skill)
+		return fitness_sum
+
+	# return the fitness for a particular skill
+	def get_skill_fitness(self, index):
+		return reduce(lambda x,y: x+y, self._skills[index])
 
 	# return whether self has a higher fitness than another chromosome
 	def score(self, b):
-		if self.get_fitness() > b.get_fitness():
+		# find skill with maximum difference
+		max_skill_difference = -1
+		max_skill_index = -1
+		for index in xrange(len(self._skills)):
+			self_fitness = self.get_skill_fitness(index)
+			b_fitness = b.get_skill_fitness(index)
+			difference = abs(self_fitness - b_fitness)
+			if difference > max_skill_difference:
+				max_skill_difference = difference
+				max_skill_index = index
+
+		# compare the two chromosomes skills with the highest diff to see who wins
+		if self.get_skill_fitness(max_skill_index) > b.get_skill_fitness(max_skill_index):
 			return 1
 		else:
 			return 0
 
 	def mutate(self):
-		#convert current value to a bit string
-		bit_string_value = list("")
-		bit_string_value += [1 for _ in xrange(self.value)]
-		bit_string_value += [0 for _ in xrange(self._max_value - self.value)]
+		for index, skill in enumerate(self._skills):
+			new_skill = []
+			for value in skill:
+				if random.random() <= 0.005:
+					new_skill.append(random.choice([0,1]))
+				else:
+					new_skill.append(value)
+			self._skills[index] = new_skill
 
-		#mutate the bit string
-		for i in xrange(self._max_value): 
-			if random.random() <= 0.005:
-				bit_string_value[i] = random.choice([0,1])
-				# if bit_string_value[i] == 1:
-				# 	bit_string_value[i] = 0
-				# else:
-				# 	bit_string_value[i] = 1
+	def print_string(self):
+		print self._skills
 
-		#recalculate the value/fitness
-		sum = reduce(lambda x,y: x+y, bit_string_value)
-		self.value = sum
 
 
 if __name__ == '__main__':
-	chromosome = Chromosome()
-	chromosome.value = 0
-	print chromosome.get_fitness()
+	chromosome = Chromosome(10)
+	chromosome2 = Chromosome(10)
+
 	chromosome.mutate()
+	chromosome.mutate()
+	chromosome.mutate()
+	chromosome.mutate()
+	chromosome.mutate()
+	chromosome.mutate()
+	chromosome.mutate()
+	chromosome.mutate()
+
+	chromosome.print_string()
+	chromosome2.print_string()
+	print chromosome.get_fitness()
+	print chromosome2.get_fitness()
+
+	print chromosome.score(chromosome2)
+

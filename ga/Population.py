@@ -12,9 +12,9 @@ class Population:
 	_population_size = 25
 	_sample_size = 15
 
-	_individual_dimensions = 1
+	_individual_dimensions = 10
 
-	def __init__(self, chromosome_value):
+	def __init__(self):
 		self._pop = [Chromosome.Chromosome(self._individual_dimensions) for _ in xrange(self._population_size)]
 
 	# set population fitness to max (for testing)
@@ -82,7 +82,7 @@ class Population:
 
 		roulette_wheel = self.get_roulette_wheel(sample)
 
-		evolved_pop = Population(0)
+		evolved_pop = Population()
 
 		#loop through every individual
 		new_population_list = []

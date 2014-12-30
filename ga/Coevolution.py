@@ -7,8 +7,8 @@ class Coevolution:
 
 
 	def __init__(self):
-		self._pop1 = Population.Population(0)
-		self._pop2 = Population.Population(0)
+		self._pop1 = Population.Population()
+		self._pop2 = Population.Population()
 
 	def next_generation(self):
 		

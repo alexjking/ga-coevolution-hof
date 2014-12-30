@@ -10,8 +10,8 @@ class DisplayMutationBias:
 	_population_size = 25
 
 	def __init__(self):
-		self._pop1 = Population.Population(1)
-		self._pop2 = Population.Population(1)
+		self._pop1 = Population.Population()
+		self._pop2 = Population.Population()
 		self._pop1.set_fitness_max()
 		self.print_populations()
 

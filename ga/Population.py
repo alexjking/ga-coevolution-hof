@@ -17,6 +17,13 @@ class Population:
 	def __init__(self, chromosome_value):
 		self._pop = [Chromosome.Chromosome(self._individual_dimensions) for _ in xrange(self._population_size)]
 
+	# set population fitness to max (for testing)
+	def set_fitness_max(self):
+		self.print_pop()
+		self._pop = [Chromosome.Chromosome(self._individual_dimensions, value=1) for _ in xrange(self._population_size)]
+		self.print_pop()
+
+
 	def print_pop(self):
 		print [chromosome.get_fitness() for chromosome in self._pop]
 

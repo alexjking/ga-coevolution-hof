@@ -9,12 +9,12 @@ class Chromosome:
 	_max_value = 100
 	_skills = []
 
-	def __init__(self, dimensions):
+	def __init__(self, dimensions, value=0):
 		self._skills = []
 		if 100 % dimensions == 0:
 			skill_length = self._max_value / dimensions
 			for i in xrange(dimensions):
-				self._skills.append([0 for _ in xrange(skill_length)])
+				self._skills.append([value for _ in xrange(skill_length)])
 		else:
 			raise Exception("Invalid number of dimensions for genome")
 		

@@ -10,8 +10,9 @@ class DisplayMutationBias:
 	_population_size = 25
 
 	def __init__(self):
-		self._pop1 = Population.Population(0)
-		self._pop2 = Population.Population(100)
+		self._pop1 = Population.Population(1)
+		self._pop2 = Population.Population(1)
+		self._pop1.set_fitness_max()
 		self.print_populations()
 
 	def next_generation(self):
@@ -42,10 +43,10 @@ if __name__ == '__main__':
 		# y_pop2.append(pop2.get_mean_fitness())
 
 		# display whole sample
-		for chromosome in pop1.get_sample():
+		for chromosome in pop1._pop:
 			x.append(i)
 			y_pop1.append(chromosome.get_fitness())
-		for chromosome in pop2.get_sample():
+		for chromosome in pop2._pop:
 			y_pop2.append(chromosome.get_fitness())
 
 	plt.scatter(x, y_pop1, s=1, facecolor='red', lw=0)

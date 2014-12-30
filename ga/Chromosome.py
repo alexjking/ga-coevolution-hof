@@ -62,6 +62,26 @@ class Chromosome:
 	def print_string(self):
 		print self._skills
 
+class IntransitiveSuperiorityChromosome(Chromosome):
+
+	def score(self, b):
+		# find skill with lowest difference
+		min_skill_difference = self._max_value #init to a large value
+		min_skill_index = -1
+		for index in xrange(len(self._skills)):
+			self_fitness = self.get_skill_fitness(index)
+			b_fitness = b.get_skill_fitness(index)
+			difference = abs(self_fitness - b_fitness)
+			if difference < min_skill_difference:
+				min_skill_difference = difference
+				min_skill_index = index
+
+		# compare the two chromosomes skills with the lowest diff to see who wins
+		if self.get_skill_fitness(min_skill_index) > b.get_skill_fitness(min_skill_index):
+			return 1
+		else:
+			return 0
+
 
 
 if __name__ == '__main__':

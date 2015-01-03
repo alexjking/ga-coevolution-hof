@@ -10,9 +10,9 @@ class Population:
 
 	_pop = []
 	_population_size = 25
-	_sample_size = 15
+	_sample_size = 1
 
-	_individual_dimensions = 10
+	_individual_dimensions = 1
 
 	def __init__(self, intransitive_superiority):
 		self._intransitive_superiority = intransitive_superiority
@@ -52,6 +52,8 @@ class Population:
 			subj_fitness_list.append(subj_fitness)
 			subj_fitness_sum += subj_fitness
 
+		# store list so that it can be used to calculate the mean subj fitness
+		self.subj_fitness_list = subj_fitness_list
 
 		if subj_fitness_sum > 0:
 			subj_fitness_probability_list = []
@@ -83,7 +85,6 @@ class Population:
 	# coevolve this population a single generation using a sample from another population
 	def coevolve(self, sample):
 		#generate fitness roulette wheel
-
 		roulette_wheel = self.get_roulette_wheel(sample)
 
 		evolved_pop = Population(self._intransitive_superiority)
@@ -122,6 +123,21 @@ class Population:
 		subj_score_list = [individual.score(ind2) for ind2 in sample]
 		fitness = np.mean(subj_score_list)
 		return fitness
+
+	# return the average subjective score for the last coevolution
+	def get_subjective_average(self):
+		if self.subj_fitness_list is not None:
+			new_list = [subj_fit/float(self._sample_size) for subj_fit in self.subj_fitness_list]
+			return np.mean(self.subj_fitness_list)
+		else:
+			return -1.0
+
+	def get_subjective_list(self):
+		if self.subj_fitness_list is not None:
+			return self.subj_fitness_list
+		else:
+			return [-1.0 for _ in xrange(self._population_size)]
+
 
 
 	

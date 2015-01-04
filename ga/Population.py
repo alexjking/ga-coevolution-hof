@@ -10,7 +10,7 @@ class Population:
 
 	_pop = []
 	_population_size = 25
-	_sample_size = 1
+	_sample_size = 15
 
 	_individual_dimensions = 1
 
@@ -190,9 +190,10 @@ class Population:
 
 class IntransitiveSuperiorityPopulation(Population):
 
-	def __init__(self, hof=False):
+	def __init__(self, hof=False, hof_filter=False):
 		self._pop = [Chromosome.IntransitiveSuperiorityChromosome(self._individual_dimensions) for _ in xrange(self._population_size)]	
 		if hof:
 			self._hof = []
+			self._hof_filter = hof_filter
 		else: 
 			self._hof = None

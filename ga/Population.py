@@ -11,7 +11,7 @@ class Population:
 
 	_pop = []
 	_population_size = 25
-	_sample_size = 15
+	_sample_size = 1
 
 	_individual_dimensions = 1
 
@@ -152,8 +152,16 @@ class Population:
 
 	# return the average subjective score for the last coevolution
 	def get_subjective_average(self):
+		# if self.subj_fitness_list is not None:
+		# 	return np.mean(self.subj_fitness_list)
+		# else:
+		# 	return -1.0
 		if self.subj_fitness_list is not None:
-			return np.mean(self.subj_fitness_list)
+			modified_list = []
+			for index, subj_fitness in enumerate(self.subj_fitness_list):
+				if index > 0:
+					modified_list.append(subj_fitness)
+			return np.mean(modified_list)
 		else:
 			return -1.0
 

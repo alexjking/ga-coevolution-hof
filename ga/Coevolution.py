@@ -8,13 +8,13 @@ import sys
 class Coevolution:
 
 
-	def __init__(self, hof, intransitive_superiority=False):
+	def __init__(self, hof, hof_filter=False, intransitive_superiority=False):
 		if intransitive_superiority:
-			self._pop1 = Population.IntransitiveSuperiorityPopulation(hof)
-			self._pop2 = Population.IntransitiveSuperiorityPopulation(hof)
+			self._pop1 = Population.IntransitiveSuperiorityPopulation(hof, hof_filter)
+			self._pop2 = Population.IntransitiveSuperiorityPopulation(hof), hof_filter
 		else:
-			self._pop1 = Population.Population(hof)
-			self._pop2 = Population.Population(hof)
+			self._pop1 = Population.Population(hof, hof_filter)
+			self._pop2 = Population.Population(hof, hof_filter)
 
 	def next_generation(self):
 		
@@ -28,9 +28,13 @@ class Coevolution:
 
 if __name__ == '__main__':
 	hof = False
-	if sys.argv[1] == "hof":
+	hof_filter = False
+
+	if len(sys.argv)>1 and sys.argv[1] == "hof":
 		hof = True
-	coev = Coevolution(hof=hof, intransitive_superiority=False)
+		if len(sys.argv)>2  and sys.argv[2] == "filter":
+			hof_filter = True
+	coev = Coevolution(hof=hof, hof_filter=hof_filter, intransitive_superiority=False)
 	x = []
 	y1 = []
 	y2 = []

@@ -16,10 +16,11 @@ class Population:
 
 	_hof_sample = 5
 
-	def __init__(self, hof=False):
+	def __init__(self, hof=False, hof_filter=False):
 		self._pop = [Chromosome.Chromosome(self._individual_dimensions) for _ in xrange(self._population_size)]	
 		if hof:
 			self._hof = []
+			self._hof_filter = hof_filter
 		else: 
 			self._hof = None
 
@@ -152,13 +153,27 @@ class Population:
 		#calculate subj scores against hof and append to score list
 		if self._hof is not None:
 			hof_sample = opponent_population.get_hof_sample()
-			subj_hof_score_list = [individual.score(champion) for champion in hof_sample] # compete against a sample from hall of fame
-			#subj_hof_score_list = [individual.score(hof) for hof in self._hof[-10:]] # compete against the whole hall of fame
-			subj_score_list.extend(subj_hof_score_list) 
+			if self._hof_filter:
+				# return score of 0 if individual doesnt beat all opponents
+				if not self.hof_filter(individual, hof_sample):
+					print "loser"
+					return 0
+			else:
+				# add subj scores to our list of scores
+				subj_hof_score_list = [individual.score(champion) for champion in hof_sample] # compete against a sample from hall of fame
+				subj_score_list.extend(subj_hof_score_list) 
 
 		#return the average score
 		fitness = np.mean(subj_score_list)
 		return fitness
+
+	# return true if the individual beats all oppponents
+	def hof_filter(self, individual, opponent_hof_sample):
+		for champion in opponent_hof_sample:
+			if individual.score(champion) == 0:
+				return False
+			else:
+				return True
 
 	# return the average subjective score for the last coevolution
 	def get_subjective_average(self):

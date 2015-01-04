@@ -41,14 +41,14 @@ class Population:
 	def get_mean_fitness(self):
 		return reduce(lambda x,y: x+y, [chromosome.get_fitness() for chromosome in self._pop])/len(self._pop)
 
-	def get_roulette_wheel(self, sample):
+	def get_roulette_wheel(self, opponent_population):
 		roulette_wheel = []
 
 		subj_fitness_list = []
 		subj_fitness_sum = 0.0
 		subj_fitness_list.append(0.0)
 		for individual in self._pop:
-			subj_fitness = self._get_subj_fitness(individual, sample)
+			subj_fitness = self._get_subj_fitness(individual, opponent_population)
 			subj_fitness_list.append(subj_fitness)
 			subj_fitness_sum += subj_fitness
 
@@ -83,11 +83,11 @@ class Population:
 		self._pop[index] = individual
 
 	# coevolve this population a single generation using a sample from another population
-	def coevolve(self, sample):
+	def coevolve(self, opponent_population):
 		#mutate the whole population
 		self.mutate()
 		#generate fitness roulette wheel
-		roulette_wheel = self.get_roulette_wheel(sample)
+		roulette_wheel = self.get_roulette_wheel(opponent_population)
 
 		evolved_pop = []
 
@@ -137,18 +137,22 @@ class Population:
 		print "error"
 		print random_choice
 
+	def get_hof_sample(self):
+		if self._hof_sample > len(self._hof):
+			random_hof_sample = random.sample(self._hof, len(self._hof))
+		else:
+			random_hof_sample = random.sample(self._hof, self._hof_sample)
+		return random_hof_sample
 
-	def _get_subj_fitness(self, individual, sample):
+
+	def _get_subj_fitness(self, individual, opponent_population):
+		sample = opponent_population.get_sample()
 		# calculate subj scores against sample
 		subj_score_list = [individual.score(ind2) for ind2 in sample] 
 		#calculate subj scores against hof and append to score list
 		if self._hof is not None:
-			random_hof_sample = []
-			if self._hof_sample > len(self._hof):
-				random_hof_sample = random.sample(self._hof, len(self._hof))
-			else:
-				random_hof_sample = random.sample(self._hof, self._hof_sample)
-			subj_hof_score_list = [individual.score(hof) for hof in random_hof_sample] # compete against a sample from hall of fame
+			hof_sample = opponent_population.get_hof_sample()
+			subj_hof_score_list = [individual.score(champion) for champion in hof_sample] # compete against a sample from hall of fame
 			#subj_hof_score_list = [individual.score(hof) for hof in self._hof[-10:]] # compete against the whole hall of fame
 			subj_score_list.extend(subj_hof_score_list) 
 

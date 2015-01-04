@@ -3,6 +3,7 @@ import random
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
+import sys
 
 class Coevolution:
 
@@ -20,13 +21,16 @@ class Coevolution:
 		pop1_sample = self._pop1.get_sample()
 		pop2_sample = self._pop2.get_sample()
 
-		pop1_copy = self._pop1.coevolve(pop2_sample)
-		pop2_copy = self._pop2.coevolve(pop1_sample)
+		pop1_copy = self._pop1.coevolve(self._pop2)
+		pop2_copy = self._pop2.coevolve(self._pop1)
 
 		return pop1_copy, pop2_copy
 
 if __name__ == '__main__':
-	coev = Coevolution(hof=True, intransitive_superiority=False)
+	hof = False
+	if sys.argv[1] == "hof":
+		hof = True
+	coev = Coevolution(hof=hof, intransitive_superiority=False)
 	x = []
 	y1 = []
 	y2 = []

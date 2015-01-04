@@ -14,7 +14,7 @@ class Population:
 
 	_individual_dimensions = 10
 
-	_hof_sample = 5
+	_hof_sample = 105
 
 	def __init__(self, hof=False, hof_filter=False):
 		self._pop = [Chromosome.Chromosome(self._individual_dimensions) for _ in xrange(self._population_size)]	

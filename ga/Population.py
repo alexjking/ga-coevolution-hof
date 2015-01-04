@@ -168,7 +168,7 @@ class IntransitiveSuperiorityPopulation(Population):
 	def __init__(self, hof=False, hof_filter=False):
 		self._pop = [Chromosome.IntransitiveSuperiorityChromosome(self._individual_dimensions) for _ in xrange(self._population_size)]	
 		if hof:
-			self._hof = []
+			self._hof = HallOfFame.HallOfFame()
 			self._hof_filter = hof_filter
 		else: 
 			self._hof = None

@@ -31,7 +31,7 @@ if __name__ == '__main__':
 		hof = True
 		if len(sys.argv)>2  and sys.argv[2] == "filter":
 			hof_filter = True
-	coev = Coevolution(hof=hof, hof_filter=hof_filter, intransitive_superiority=True)
+	coev = Coevolution(hof=hof, hof_filter=hof_filter, intransitive_superiority=False)
 	x = []
 	y1 = []
 	y2 = []

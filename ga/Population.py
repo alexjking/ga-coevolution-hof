@@ -5,6 +5,7 @@ import random
 from copy import deepcopy
 import numpy as np
 import math
+import HallOfFame
 
 class Population:
 
@@ -12,14 +13,14 @@ class Population:
 	_population_size = 25
 	_sample_size = 15
 
-	_individual_dimensions = 10
+	_individual_dimensions = 1
 
-	_hof_sample = 105
+	_hof_sample = 15
 
 	def __init__(self, hof=False, hof_filter=False):
 		self._pop = [Chromosome.Chromosome(self._individual_dimensions) for _ in xrange(self._population_size)]	
 		if hof:
-			self._hof = []
+			self._hof = HallOfFame.HallOfFame()
 			self._hof_filter = hof_filter
 		else: 
 			self._hof = None
@@ -91,14 +92,10 @@ class Population:
 		roulette_wheel = self.get_roulette_wheel(opponent_population)
 
 		evolved_pop = []
-
-		#loop through every individual
 		new_population_list = []
-
 		for index, individual in enumerate(self._pop):
 			individual_copy = deepcopy(individual)
 			selection = self.select_individual(roulette_wheel)
-			#selection.mutate()
 			evolved_pop.append(selection)
 		self.update_hof()
 
@@ -117,33 +114,19 @@ class Population:
 						highest_subj_score = subj_score
 						best_individual = self._pop[index-1]
 
-			self._hof.append(best_individual)
+			self._hof.update(best_individual)
 			#self.print_hof()
-
-	def print_hof(self):
-		print "hof"
-		if self._hof is not None:
-			print [individual.get_fitness() for individual in self._hof]
 
 
 	# roulette wheel selection
 	def select_individual(self, roulette_wheel):
-
 		random_choice = random.random()
 		for index in xrange(len(self._pop)):
 			roulette_value = roulette_wheel[index]
 			if random_choice >= roulette_value and random_choice < roulette_wheel[index+1]:
 				return deepcopy(self._pop[index])
-
 		print "error"
 		print random_choice
-
-	def get_hof_sample(self):
-		if self._hof_sample > len(self._hof):
-			random_hof_sample = random.sample(self._hof, len(self._hof))
-		else:
-			random_hof_sample = random.sample(self._hof, self._hof_sample)
-		return random_hof_sample
 
 
 	def _get_subj_fitness(self, individual, opponent_population):
@@ -152,27 +135,20 @@ class Population:
 		subj_score_list = [individual.score(ind2) for ind2 in sample] 
 		#calculate subj scores against hof and append to score list
 		if self._hof is not None:
-			hof_sample = opponent_population.get_hof_sample()
 			if self._hof_filter:
 				# return score of 0 if individual doesnt beat all opponents
-				if not self.hof_filter(individual, hof_sample):
-					return 0
+				if opponent_population._hof.compete_against_hof(individual):
+					return np.mean(subj_score_list)
+				else:
+					return 0.0 # failed to beat all opponent hof
 			else:
 				# add subj scores to our list of scores
+				hof_sample = opponent_population._hof.get_sample()
 				subj_hof_score_list = [individual.score(champion) for champion in hof_sample] # compete against a sample from hall of fame
 				subj_score_list.extend(subj_hof_score_list) 
-
-		#return the average score
-		fitness = np.mean(subj_score_list)
-		return fitness
-
-	# return true if the individual beats all oppponents
-	def hof_filter(self, individual, opponent_hof_sample):
-		for champion in opponent_hof_sample:
-			if individual.score(champion) == 0:
-				return False
-			else:
-				return True
+				return np.mean(subj_score_list)
+		else:
+			return np.mean(subj_score_list)
 
 	# return the average subjective score for the last coevolution
 	def get_subjective_average(self):

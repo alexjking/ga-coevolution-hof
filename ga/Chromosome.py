@@ -62,6 +62,18 @@ class Chromosome:
 	def print_string(self):
 		print self._skills
 
+	def set_fitness_max(self):
+		dimensions = len(self._skills)
+		self._skills = []
+		if 100 % dimensions == 0:
+			skill_length = self._max_value / dimensions
+			for i in xrange(dimensions):
+				self._skills.append([1 for _ in xrange(skill_length)])
+		else:
+			raise Exception("Invalid number of dimensions for genome")
+
+
+
 class IntransitiveSuperiorityChromosome(Chromosome):
 
 	def score(self, b):

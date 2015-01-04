@@ -26,7 +26,7 @@ class Coevolution:
 		return pop1_copy, pop2_copy
 
 if __name__ == '__main__':
-	coev = Coevolution(intransitive_superiority=True)
+	coev = Coevolution(intransitive_superiority=False)
 	x = []
 	y1 = []
 	y2 = []

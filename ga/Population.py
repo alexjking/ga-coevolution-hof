@@ -10,12 +10,18 @@ class Population:
 
 	_pop = []
 	_population_size = 25
-	_sample_size = 1
+	_sample_size = 15
 
 	_individual_dimensions = 10
 
-	def __init__(self):
+	_hof_sample = 10
+
+	def __init__(self, hof=False):
 		self._pop = [Chromosome.Chromosome(self._individual_dimensions) for _ in xrange(self._population_size)]	
+		if hof:
+			self._hof = []
+		else: 
+			self._hof = None
 
 	# set population fitness to max (for testing)
 	def set_fitness_max(self):
@@ -78,6 +84,8 @@ class Population:
 
 	# coevolve this population a single generation using a sample from another population
 	def coevolve(self, sample):
+		#mutate the whole population
+		self.mutate()
 		#generate fitness roulette wheel
 		roulette_wheel = self.get_roulette_wheel(sample)
 
@@ -89,7 +97,7 @@ class Population:
 		for index, individual in enumerate(self._pop):
 			individual_copy = deepcopy(individual)
 			selection = self.select_individual(roulette_wheel)
-			selection.mutate()
+			#selection.mutate()
 			evolved_pop.append(selection)
 
 		self._pop = evolved_pop
@@ -111,14 +119,19 @@ class Population:
 
 
 	def _get_subj_fitness(self, individual, sample):
-		subj_score_list = [individual.score(ind2) for ind2 in sample]
+		# calculate subj scores against sample
+		subj_score_list = [individual.score(ind2) for ind2 in sample] 
+		#calculate subj scores against hof and append to score list
+		if self._hof is not None:
+			subj_hof_score_list = [individual.score(hof) for hof in random.sample(self._hof, self._hof_sample)]
+			subj_score_list.extend(subj_hof_score_list) 
+		#return the average score
 		fitness = np.mean(subj_score_list)
 		return fitness
 
 	# return the average subjective score for the last coevolution
 	def get_subjective_average(self):
 		if self.subj_fitness_list is not None:
-			new_list = [subj_fit/float(self._sample_size) for subj_fit in self.subj_fitness_list]
 			return np.mean(self.subj_fitness_list)
 		else:
 			return -1.0
@@ -131,10 +144,9 @@ class Population:
 
 class IntransitiveSuperiorityPopulation(Population):
 
-	def __init__(self):
+	def __init__(self, hof=False):
 		self._pop = [Chromosome.IntransitiveSuperiorityChromosome(self._individual_dimensions) for _ in xrange(self._population_size)]	
-
-
-
-
-	
+		if hof:
+			self._hof = []
+		else: 
+			self._hof = None

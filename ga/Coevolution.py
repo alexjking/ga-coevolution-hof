@@ -7,13 +7,13 @@ import numpy as np
 class Coevolution:
 
 
-	def __init__(self, intransitive_superiority=False):
+	def __init__(self, hof, intransitive_superiority=False):
 		if intransitive_superiority:
-			self._pop1 = Population.IntransitiveSuperiorityPopulation()
-			self._pop2 = Population.IntransitiveSuperiorityPopulation()
+			self._pop1 = Population.IntransitiveSuperiorityPopulation(hof)
+			self._pop2 = Population.IntransitiveSuperiorityPopulation(hof)
 		else:
-			self._pop1 = Population.Population()
-			self._pop2 = Population.Population()
+			self._pop1 = Population.Population(hof)
+			self._pop2 = Population.Population(hof)
 
 	def next_generation(self):
 		
@@ -26,7 +26,7 @@ class Coevolution:
 		return pop1_copy, pop2_copy
 
 if __name__ == '__main__':
-	coev = Coevolution(intransitive_superiority=False)
+	coev = Coevolution(hof=True, intransitive_superiority=True)
 	x = []
 	y1 = []
 	y2 = []

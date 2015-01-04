@@ -99,10 +99,26 @@ class Population:
 			selection = self.select_individual(roulette_wheel)
 			#selection.mutate()
 			evolved_pop.append(selection)
+		self.update_hof()
 
 		self._pop = evolved_pop
 		return self
 
+	# adds the best individual of the current population to the hof
+	def update_hof(self):
+		if self._hof is not None:
+			best_individual = None
+			highest_obj_score = -1
+			for individual in self._pop:
+				if individual.get_fitness() > highest_obj_score:
+					best_individual = individual
+			self._hof.append(best_individual)
+			#self.print_hof()
+
+	def print_hof(self):
+		print "hof"
+		if self._hof is not None:
+			print [individual.get_fitness() for individual in self._hof]
 
 
 	# roulette wheel selection
@@ -123,7 +139,13 @@ class Population:
 		subj_score_list = [individual.score(ind2) for ind2 in sample] 
 		#calculate subj scores against hof and append to score list
 		if self._hof is not None:
-			subj_hof_score_list = [individual.score(hof) for hof in random.sample(self._hof, self._hof_sample)]
+			random_hof_sample = []
+			if self._hof_sample > len(self._hof):
+				random_hof_sample = random.sample(self._hof, len(self._hof))
+			else:
+				random_hof_sample = random.sample(self._hof, self._hof_sample)
+			#subj_hof_score_list = [individual.score(hof) for hof in random_hof_sample] # compete against a sample from hall of fame
+			subj_hof_score_list = [individual.score(hof) for hof in self._hof[-10:]] # compete against the whole hall of fame
 			subj_score_list.extend(subj_hof_score_list) 
 		#return the average score
 		fitness = np.mean(subj_score_list)

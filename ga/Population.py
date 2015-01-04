@@ -12,21 +12,15 @@ class Population:
 	_population_size = 25
 	_sample_size = 1
 
-	_individual_dimensions = 1
+	_individual_dimensions = 10
 
-	def __init__(self, intransitive_superiority):
-		self._intransitive_superiority = intransitive_superiority
-		if intransitive_superiority:
-			self._pop = [Chromosome.IntransitiveSuperiorityChromosome(self._individual_dimensions) for _ in xrange(self._population_size)]	
-		else:
-			self._pop = [Chromosome.Chromosome(self._individual_dimensions) for _ in xrange(self._population_size)]	
+	def __init__(self):
+		self._pop = [Chromosome.Chromosome(self._individual_dimensions) for _ in xrange(self._population_size)]	
 
 	# set population fitness to max (for testing)
 	def set_fitness_max(self):
-		if intransitive_superiority:
-			self._pop = [Chromosome.IntransitiveSuperiorityChromosome(self._individual_dimensions, value=1) for _ in xrange(self._population_size)]	
-		else:
-			self._pop = [Chromosome.Chromosome(self._individual_dimensions, value=1) for _ in xrange(self._population_size)]
+		for individual in self._pop:
+			individual.set_fitness_max()
 
 	def print_pop(self):
 		print [chromosome.get_fitness() for chromosome in self._pop]
@@ -87,21 +81,18 @@ class Population:
 		#generate fitness roulette wheel
 		roulette_wheel = self.get_roulette_wheel(sample)
 
-		evolved_pop = Population(self._intransitive_superiority)
+		evolved_pop = []
 
 		#loop through every individual
 		new_population_list = []
 
 		for index, individual in enumerate(self._pop):
 			individual_copy = deepcopy(individual)
-
 			selection = self.select_individual(roulette_wheel)
 			selection.mutate()
+			evolved_pop.append(selection)
 
-			evolved_pop.set_individual(index, selection)
-
-
-		self._pop = evolved_pop._pop
+		self._pop = evolved_pop
 		return self
 
 
@@ -137,6 +128,12 @@ class Population:
 			return self.subj_fitness_list
 		else:
 			return [-1.0 for _ in xrange(self._population_size)]
+
+class IntransitiveSuperiorityPopulation(Population):
+
+	def __init__(self):
+		self._pop = [Chromosome.IntransitiveSuperiorityChromosome(self._individual_dimensions) for _ in xrange(self._population_size)]	
+
 
 
 

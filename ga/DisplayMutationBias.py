@@ -35,6 +35,7 @@ if __name__ == '__main__':
 
 
 	for i in xrange(600):
+		print i
 		pop1, pop2 = bias.next_generation()
 
 		# display average

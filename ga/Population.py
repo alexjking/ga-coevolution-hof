@@ -12,7 +12,7 @@ class Population:
 	_population_size = 25
 	_sample_size = 15
 
-	_individual_dimensions = 1
+	_individual_dimensions = 10
 
 	_hof_sample = 5
 
@@ -156,7 +156,6 @@ class Population:
 			if self._hof_filter:
 				# return score of 0 if individual doesnt beat all opponents
 				if not self.hof_filter(individual, hof_sample):
-					print "loser"
 					return 0
 			else:
 				# add subj scores to our list of scores
